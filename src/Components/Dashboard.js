@@ -21,22 +21,39 @@ function DashBoard() {
     { id: 2, name: "parul ", course: "Node", fees: 17000 },
   ])
 
-  
+
+
+  const editStudent = (editId) => {
+    console.log('edited data',editId);
+   
+    const items = data.map((item)=>{ 
+      if(item.id == editId){
+        console.log(item.name);
+      }
+    });
     
-  const editStudent = () => {
-    console.log("Edited");
   };
 
-  const deleteStudent = () => {
-    console.log("Deleted");
+  const deleteStudent = (itemId) => {
+    console.log("Deleted",itemId);
+   
+       const items = data.filter(item => item.id !== itemId);
+       console.log(items)
+     
+       setData(items)
+   
   };
 
   const handleData = (et) =>{
     console.log("ttt", et);
-
-    setData(...[data],et)
-
+  
+    setData([...data,et]);
+    
   }
+
+  useEffect(() => {
+    setData(...[data])
+  }, []);
 
 console.log("data",data);
   return (
@@ -58,7 +75,7 @@ console.log("data",data);
             {data.map((row) => (
             
               <TableRow
-                key={row.id}
+                key={row.id} 
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
@@ -69,10 +86,10 @@ console.log("data",data);
                 <TableCell align="right">{row.fees}</TableCell>
 
                 <TableCell align="right">
-                  <Button onClick={editStudent}>Edit</Button>
+                  <Button  onClick={()=>editStudent(row.id)} >Edit</Button>
                 </TableCell>
                 <TableCell align="right">
-                  <Button onClick={deleteStudent}>Delete</Button>
+                  <Button onClick={()=>deleteStudent(row.id)}>Delete</Button>
                 </TableCell>
               </TableRow>
             ))}

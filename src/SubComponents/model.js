@@ -22,9 +22,9 @@ function ModelView(props) {
   let Totaldata = [...props.value];
 //   const [data, setData] = useState(Totaldata);
 
-  useEffect(() => {
-    console.log('****'+Totaldata)
-  }, []);
+  // useEffect(() => {
+  //   console.log('****'+Totaldata)
+  // }, []);
 
   const [allValues, setAllValues] = useState({
     id: "",
