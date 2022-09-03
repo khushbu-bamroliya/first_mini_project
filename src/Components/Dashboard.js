@@ -17,9 +17,16 @@ import EditBtn from '../SubComponents/editBtn'
 function DashBoard() {
 
   const [data, setData] = useState([
-    { id: 1, name: "khushbu ", course: "React", fees: 15000 },
-    { id: 2, name: "parul ", course: "Node", fees: 17000 },
+    { id: "1", name: "khushbu ", course: "React", fees: "15000" },
+    { id: "2", name: "parul ", course: "Node", fees: "17000" },
   ])
+
+  const [inputData,setInputData]=useState([{
+    id:'',
+    name:'',
+    course:'',
+    fees:''
+  }])
 
   let tfValue=true;
 
@@ -28,34 +35,35 @@ function DashBoard() {
     tfValue=tf;
   }
 
-  const updatedData={
-    id:'',
-    name:'',
-    course:'',
-    fees:''
-  }
+ 
 
   const editStudent = (editId) => {
     console.log('edited data', tfValue);
-     const items = data.map((item) => {
-      if (item.id === editId) {
-        updatedData.id=editId;
-        updatedData.name=item.name;
-        updatedData.course=item.course;
-        updatedData.fees=item.fees;
-        console.log(updatedData);
-      }
-    });
+    
+    let newEditItems=data.find((elm)=>{
+      console.log("elm.id: ",elm.id);
+      console.log("editId: ",editId);
+      return elm.id==editId
+    })
+    console.log("newedititems",newEditItems);
+   
+    setInputData({id:newEditItems.id,
+      name:newEditItems.name,
+      course:newEditItems.course,
+      fees:newEditItems.fees,
+      unikId:editId,
+    })
     tfValue();
+   
+   
    
   };
 
   const deleteStudent = (itemId) => {
     console.log("Deleted", itemId);
 
-    const items = data.filter(item => item.id !== itemId);
+    const items = data.filter((item,ind) => ind !== itemId);
     console.log(items)
-
     setData(items)
 
   };
@@ -65,16 +73,21 @@ function DashBoard() {
     setData([...data, et]);
   }
 
- 
 
   useEffect(() => {
-    setData(...[data])
-  }, []);
+    setTimeout(() => {
+      setData([...data]);
+    }, );
+  });
+
+  // useEffect(() => {
+  //   setData(...[data])
+  // }, );
 
   console.log("data", data);
   return (
     <div>
-      <ModelView value={data} setDataFun={handleData} editFun={tVal} upData={updatedData}/>
+      <ModelView value={data} setDataFun={handleData} editFun={tVal} upData={inputData}/>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -88,9 +101,9 @@ function DashBoard() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((row) => (
+            {data.map((row,ind) => (
               <TableRow
-                key={row.id}
+                key={ind}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
@@ -101,10 +114,10 @@ function DashBoard() {
                 <TableCell align="right">{row.fees}</TableCell>
                 <TableCell align="right">
                   {/* <Button onClick={() => editStudent()} >Edit</Button> */}
-                  <EditBtn editFun={()=>editStudent(row.id)}/>
+                  <EditBtn editFun={()=>editStudent(ind+1)}/>
                 </TableCell>
                 <TableCell align="right">
-                  <Button onClick={() => deleteStudent(row.id)}>Delete</Button>
+                  <Button onClick={() => deleteStudent(ind)}>Delete</Button>
                 </TableCell>
               </TableRow>
             ))}

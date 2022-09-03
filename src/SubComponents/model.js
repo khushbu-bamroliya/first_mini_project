@@ -5,7 +5,6 @@ import Modal from "@mui/material/Modal";
 import React, { useEffect, useState, } from "react";
 import ButtonView from "./addBtn";
 
-
 const style = {
   position: "absolute",
   top: "50%",
@@ -18,42 +17,27 @@ const style = {
   p: 4,
 };
 
-
-
 function ModelView(props) {
 
   let Totaldata = [...props.value];
-  const updata = props.upData;
+  // props.upData.id==''?null:props.upData.id;
+  // props.upData.name==''?null:props.upData.name;
+  // props.upData.course==''?null:props.upData.course;
+  // props.upData.fees==''?null:props.upData.fees;
+  let updata = props.upData == {} ? null : props.upData;
+
+  console.log("updata", updata);
   const [allValues, setAllValues] = useState({
     id: "",
-    name: '',
+    name: "",
     course: "",
     fees: "",
   });
 
-  useEffect(() => {
-
-  })
-
-
-
 
   const changeHandler = (e) => {
 
-
-    console.log(updata);
-
-    // if(e.target.name!=''){
-    //   console.log('ok')
-
     setAllValues({ ...allValues, [e.target.name]: e.target.value });
-    // }
-    // else if(e.target.name=='' &&  e.target.id==updata.id){
-    //   console.log('not ok')
-    // setAllValues({name: updata.name,
-    // });
-
-    // }
   };
 
   const [open, setOpen] = React.useState(false);
@@ -61,32 +45,51 @@ function ModelView(props) {
 
   const handleClose = () => {
 
+    if (!allValues.id && !allValues.name &&
+      !allValues.course && !allValues.fees) {
+      alert("plz fill data")
+    }
+    else if (updata.id != null &&
+      updata.name != null &&
+      updata.course != null &&
+      updata.fees != null) {
+      console.log('edited')
+      Totaldata.map(d => {
 
-
-
-
-    Totaldata.push(allValues);
-
-
-    // setData(Totaldata);
-    console.log(Totaldata);
-    console.log(allValues);
-
-
-    props.setDataFun(allValues);
-
-    setOpen(false);
+        if (d.id == updata.unikId) {
+          return setAllValues([...Totaldata,
+          allValues.id = allValues.id == '' ? updata.id : allValues.id,
+          allValues.name = allValues.name == '' ? updata.name : allValues.name,
+          allValues.course = allValues.course == '' ? updata.course : allValues.course,
+          allValues.fees = allValues.fees == '' ? updata.fees : allValues.fees,
+          ])
+        }
+        const objIndex = Totaldata.findIndex((obj => obj.id == updata.id));
+        Totaldata[objIndex] = allValues
+        props.value[objIndex] = allValues
+      }
+      )
+      updata.id = null;
+      updata.name = null;
+      updata.course = null;
+      updata.fees = null;
+      setOpen(false);
+    }
+    else if (updata.id == null &&
+      updata.name == null &&
+      updata.course == null &&
+      updata.fees == null) {
+      console.log('pushed')
+      Totaldata.push(allValues);
+      props.setDataFun(allValues);
+      setOpen(false);
+      setAllValues({})
+    }
   };
-
-
-
   props.editFun(handleOpen);
 
   return (
     <div>
-      {/* <Button variant="outlined" onClick={handleOpen}>
-        Add Student
-      </Button> */}
       <br />
       <ButtonView handleOpen={handleOpen} />
       <br />
